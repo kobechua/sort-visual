@@ -76,7 +76,7 @@ int main() {
     window.setFramerateLimit(60);
     
     //ask for user input
-    int n = 10;
+    int n = 100;
 
     std::vector<int> elements(n);
 
@@ -95,7 +95,7 @@ int main() {
         window.clear();
         
         bubbleSort(window, elements, n);
-        
+        visual(window, elements);
         window.display();
 
     }
