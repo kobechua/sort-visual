@@ -1,20 +1,19 @@
 #include <iostream>
 #include <algorithm>
 #include <random>
+#include <thread>
 #include <unistd.h>
 #include <SFML/Graphics.hpp>
-
 
 #define WIDTH 600
 #define HEIGHT 400
 #define PADDING 20
-
-typedef void (*SortingAlgo)(std::vector<int>&, int);
+#define HERE "*"
 
 void visual(sf::RenderWindow& window, std::vector<int> el) {
     int n = el.size();
-    for (int i; i < n; i++){
-        sleep(1);
+    for (int i=0; i < n; i++){
+        std::cout  << i << std::endl;
         int h, w, x, y;
         h = el[i] * ((HEIGHT - 2 * PADDING) / (n-1));
         w = (WIDTH - 20 * PADDING) / (n-1);
@@ -28,7 +27,6 @@ void visual(sf::RenderWindow& window, std::vector<int> el) {
         rectangle.rotate(180);
         window.draw(rectangle);
     }
-    window.display();
     std::cout << std::endl;
 }
 
@@ -38,10 +36,9 @@ void bubbleSort(sf::RenderWindow& window, std::vector<int>& arr, int n) {
     for (i = 0; i < n - 1; i++) {
         swapped = false;
         for (j = 0; j < n - i - 1; j++) {
+ 
             if (arr[j] > arr[j + 1]) {
-                std::swap(arr[j], arr[j + 1]);
                 swapped = true;
-                visual(window, arr);
             }
         }
 
@@ -79,7 +76,6 @@ int main() {
 
     randomize(elements);
 
-    bubbleSort(window, elements, n-1);
     while (window.isOpen())
     {
         sf::Event event;
@@ -91,8 +87,9 @@ int main() {
 
         window.clear();
         
-        //window.draw(rectangle);        
-        //window.display();
+        visual(window, elements);
+        
+        window.display();
 
     }
 
