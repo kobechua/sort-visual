@@ -4,6 +4,7 @@
 #include <time.h>
 #include <unistd.h>
 #include <SFML/Graphics.hpp>
+#include "button.hpp"
 
 #define WIDTH 600
 #define HEIGHT 400
@@ -16,7 +17,7 @@ void visual(sf::RenderWindow& window, std::vector<int> el, int m) {
         int h, w, x, y;
         h = el[i] * ((HEIGHT - 2 * PADDING) / (n-1));
         w = (WIDTH - 20 * PADDING) / (n-1);
-        x = 200 + (i * 1.1 * w); 
+        x = 200 + (i * 1.2 * w); 
         y = HEIGHT - PADDING;
         
         //std::cout << el[i] << " " << h << " " << w << " " << x << " " << y << std::endl;
@@ -90,7 +91,7 @@ void insertionSort(sf::RenderWindow& window, std::vector<int>& arr, int n)
         arr[j + 1] = key;
         usleep(100000);
         window.clear();
-        visual(window, arr, key);
+        visual(window, arr, arr[j+1]);
     }
 }
 
@@ -110,19 +111,45 @@ void randomize(std::vector<int>& el) {
 
 }
 
+void menu(sf::RenderWindow& window) {
+    int n, c;
+
+    std::cout << "Enter N: ";
+    std::cin >> n;
+
+    std::vector<int> el(n);
+    
+    randomize(el);
+
+    std::cout << "Select Sorting Algorithm: " << std::endl;
+    std::cin >> c;
+
+    while (1){
+        if (c == 1) bubbleSort(window, el, n);
+        else if (c == 2) selectionSort(window, el, n);
+        else if (c == 3) insertionSort(window, el, n);
+        else break;
+        visual(window, el, -1);
+        std::cout << "Select Sorting Algorithm: " << std::endl;
+        std::cin >> c;
+        randomize(el);
+    }
+        
+}
+ 
 int main() {
     sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "Sorting Visualization");
  
     window.setFramerateLimit(60);
     
-    //ask for user input
+    /*ask for user input
     int n = 37;
 
     std::vector<int> elements(n);
 
     randomize(elements);
-
-
+    */
+    
     while (window.isOpen())
     {
         sf::Event event;
@@ -133,10 +160,10 @@ int main() {
         }
 
         window.clear();
-        
-        insertionSort(window, elements, n);
-        visual(window, elements, -1);
-        window.display();
+    
+        menu(window);
+
+        /*visual(window, elements, -1);*/
 
     }
 
