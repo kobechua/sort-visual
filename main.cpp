@@ -13,7 +13,6 @@
 void visual(sf::RenderWindow& window, std::vector<int> el) {
     int n = el.size();
     for (int i=0; i < n; i++){
-        std::cout  << i << std::endl;
         int h, w, x, y;
         h = el[i] * ((HEIGHT - 2 * PADDING) / (n-1));
         w = (WIDTH - 20 * PADDING) / (n-1);
@@ -27,18 +26,25 @@ void visual(sf::RenderWindow& window, std::vector<int> el) {
         rectangle.rotate(180);
         window.draw(rectangle);
     }
+    window.display();
+
     std::cout << std::endl;
 }
 
 void bubbleSort(sf::RenderWindow& window, std::vector<int>& arr, int n) {
     int i, j;
     bool swapped;
+    sleep(2);
     for (i = 0; i < n - 1; i++) {
         swapped = false;
         for (j = 0; j < n - i - 1; j++) {
  
             if (arr[j] > arr[j + 1]) {
                 swapped = true;
+                std::swap(arr[j], arr[j+1]);
+                sleep(0.5);
+                window.clear();
+                visual(window, arr);
             }
         }
 
@@ -76,6 +82,7 @@ int main() {
 
     randomize(elements);
 
+
     while (window.isOpen())
     {
         sf::Event event;
@@ -87,7 +94,7 @@ int main() {
 
         window.clear();
         
-        visual(window, elements);
+        bubbleSort(window, elements, n);
         
         window.display();
 
