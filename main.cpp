@@ -13,7 +13,6 @@
 
 void visual(sf::RenderWindow& window, std::vector<int> el, int m) {
     int n = el.size();
-    window.clear();
     for (int i=0; i < n; i++){
         int h, w, x, y;
         h = el[i] * ((HEIGHT - 2 * PADDING) / (n-1));
@@ -47,14 +46,13 @@ void bubbleSort(sf::RenderWindow& window, std::vector<int>& arr, int n) {
             if (arr[j] > arr[j + 1]) {
                 swapped = true;
                 std::swap(arr[j], arr[j+1]);
+                window.clear();
                 visual(window, arr, arr[j]);
             }
         }
 
         if (swapped == false)
             break;
-
-        /*visual(window, arr, -1);*/
     }
 }
 
@@ -72,11 +70,11 @@ void selectionSort(sf::RenderWindow& window, std::vector<int>& arr, int n)
 
        if (min_idx != i) {
             std::swap(arr[min_idx], arr[i]);
+            window.clear();
             usleep(100000);
             visual(window, arr, arr[min_idx]);
         }
     }
-    /*visual(window, arr, -1);*/
 }
 
 void insertionSort(sf::RenderWindow& window, std::vector<int>& arr, int n)
@@ -92,9 +90,9 @@ void insertionSort(sf::RenderWindow& window, std::vector<int>& arr, int n)
         }
         arr[j + 1] = key;
         usleep(100000);
+        window.clear();
         visual(window, arr, arr[j+1]);
     }
-    /*visual(window, arr, -1);*/
 }
 
 //accepts a sorting function, number of elements
@@ -113,16 +111,44 @@ void randomize(std::vector<int>& el) {
 
 }
 
+void menu(sf::RenderWindow& window) {
+    int n, c;
+
+    std::cout << "Enter N: ";
+    std::cin >> n;
+
+    std::vector<int> el(n);
+    
+    randomize(el);
+
+    std::cout << "Select Sorting Algorithm: " << std::endl;
+    std::cin >> c;
+
+    while (1){
+        if (c == 1) bubbleSort(window, el, n);
+        else if (c == 2) selectionSort(window, el, n);
+        else if (c == 3) insertionSort(window, el, n);
+        else break;
+        visual(window, el, -1);
+        std::cout << "Select Sorting Algorithm: " << std::endl;
+        std::cin >> c;
+        randomize(el);
+    }
+        
+}
+ 
 int main() {
-    sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "Sorting Visualization");
+    sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "Sorting Visualization", sf::Style::Titlebar | sf::Style::Close);
  
     window.setFramerateLimit(60);
     
+    /*ask for user input
     int n = 37;
 
     std::vector<int> elements(n);
 
     randomize(elements);
+    */
     
     while (window.isOpen())
     {
@@ -132,12 +158,13 @@ int main() {
             if (event.type == sf::Event::Closed)
                 window.close();
         }
-        
+
         window.clear();
     
-        bubbleSort(window, elements, n);
+        menu(window);
 
-        visual(window, elements, -1);
+        /*visual(window, elements, -1);*/
+
     }
 
     return 0;
