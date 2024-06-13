@@ -1,15 +1,66 @@
 #include <iostream>
 #include <algorithm>
 #include <random>
+#include <string>
 #include <time.h>
 #include <unistd.h>
 #include <SFML/Graphics.hpp>
-#include "button.hpp"
 
 #define WIDTH 600
 #define HEIGHT 400
 #define PADDING 20
 #define HERE "*"
+
+class Button {
+private:
+    sf::RenderWindow* wn;
+    int w;
+    int h;
+    int x;
+    int y;
+    int s;
+    std::string t;
+    sf::Color c;
+    sf::Font f;
+    sf::Text buttonText;
+    sf::RectangleShape buttonShape;
+
+public:
+    int id;
+
+
+    Button(sf::RenderWindow& window, int i, int width, int height, int xpos, int ypos, int size, std::string text, std::string fontPath, sf::Color color)
+        : wn(&window), id(i), w(width), h(height), x(xpos), y(ypos), s(size), t(text), c(color) {
+        
+        if (!f.loadFromFile(fontPath)) {
+            // Handle error
+        }
+
+        buttonText.setFont(f);
+        buttonText.setString(t);
+        buttonText.setCharacterSize(s);
+        buttonText.setFillColor(sf::Color::Black);
+        buttonText.setPosition(x + w / 2 - buttonText.getGlobalBounds().width / 2, y + h / 2 - buttonText.getGlobalBounds().height / 2);
+
+        buttonShape.setSize(sf::Vector2f(w, h));
+        buttonShape.setFillColor(c);
+        buttonShape.setPosition(x, y);
+    }
+
+    void draw() {
+        wn->draw(buttonShape);
+        wn->draw(buttonText);
+    }
+
+    bool checkInput(sf::Vector2i position) {
+        if (position.x - 2100 > x && position.x - 2100 < x + w && position.y < y && position.y > y + h) {
+            return true;
+        }
+        return false;
+    }
+
+};
+
 
 void visual(sf::RenderWindow& window, std::vector<int> el, int m) {
     int n = el.size();
@@ -18,6 +69,7 @@ void visual(sf::RenderWindow& window, std::vector<int> el, int m) {
         h = el[i] * ((HEIGHT - 2 * PADDING) / (n-1));
         w = (WIDTH - 20 * PADDING) / (n-1);
         x = 200 + (i * 1.2 * w); 
+
         y = HEIGHT - PADDING;
         
         //std::cout << el[i] << " " << h << " " << w << " " << x << " " << y << std::endl;
@@ -95,6 +147,34 @@ void insertionSort(sf::RenderWindow& window, std::vector<int>& arr, int n)
     }
 }
 
+void countSort(std::vector<int>& inputArray, int N) {
+ 
+    int M = 0;
+ 
+    for (int i = 0; i < N; i++)
+        M = std::max(M, inputArray[i]);
+ 
+    std::vector<int> countArray(M + 1, 0);
+ 
+    for (int i = 0; i < N; i++)
+        countArray[inputArray[i]]++;
+ 
+    for (int i = 1; i <= M; i++)
+        countArray[i] += countArray[i - 1];
+ 
+    std::vector<int> outputArray(N);
+ 
+    for (int i = N - 1; i >= 0; i--)
+ 
+    {
+        outputArray[countArray[inputArray[i]] - 1] = inputArray[i];
+ 
+        countArray[inputArray[i]]--;
+    }
+ 
+    return;
+}
+
 //accepts a sorting function, number of elements
 void randomize(std::vector<int>& el) {
     
@@ -119,21 +199,19 @@ void menu(sf::RenderWindow& window) {
 
     std::vector<int> el(n);
     
-    randomize(el);
+        while (1) {
 
-    std::cout << "Select Sorting Algorithm: " << std::endl;
-    std::cin >> c;
+            randomize(el);
+            std::cout << "Select Sorting Algorithm: " << std::endl;
+            std::cin >> c;
+            
+            if (c == 1) bubbleSort(window, el, n);
+            else if (c == 2) selectionSort(window, el, n);
+            else if (c == 3) insertionSort(window, el, n);
+            else break;
 
-    while (1){
-        if (c == 1) bubbleSort(window, el, n);
-        else if (c == 2) selectionSort(window, el, n);
-        else if (c == 3) insertionSort(window, el, n);
-        else break;
-        visual(window, el, -1);
-        std::cout << "Select Sorting Algorithm: " << std::endl;
-        std::cin >> c;
-        randomize(el);
-    }
+            visual(window, el, -1);
+        }
         
 }
  
@@ -150,6 +228,8 @@ int main() {
     randomize(elements);
     */
     
+    Button button(window, 0, 100, 25, 150, 140, 12, "test", "./Tiny5.ttf", sf::Color::White);
+
     while (window.isOpen())
     {
         sf::Event event;
@@ -158,10 +238,18 @@ int main() {
             if (event.type == sf::Event::Closed)
                 window.close();
         }
+        
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && button.checkInput(sf::Mouse::getPosition())) {
+            std::cout << sf::Mouse::getPosition().x << " " <<  sf::Mouse::isButtonPressed(sf::Mouse::Left)<< std::endl;    
+        }
 
         window.clear();
-    
-        menu(window);
+        
+        button.draw();
+
+        window.display();
+
+        /*menu(window);*/
 
         /*visual(window, elements, -1);*/
 
