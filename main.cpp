@@ -53,7 +53,9 @@ public:
     }
 
     bool checkInput(sf::Vector2i position) {
-        if (position.x - 2100 > x && position.x - 2100 < x + w && position.y < y && position.y > y + h) {
+        if (position.x > x && position.x < x + w && position.y < y && position.y > y + h) {
+
+
             return true;
         }
         return false;
@@ -201,6 +203,7 @@ void menu(sf::RenderWindow& window) {
     
         while (1) {
 
+
             randomize(el);
             std::cout << "Select Sorting Algorithm: " << std::endl;
             std::cin >> c;
@@ -239,17 +242,20 @@ int main() {
                 window.close();
         }
         
-        if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && button.checkInput(sf::Mouse::getPosition())) {
-            std::cout << sf::Mouse::getPosition().x << " " <<  sf::Mouse::isButtonPressed(sf::Mouse::Left)<< std::endl;    
+        std::cout << sf::Mouse::getPosition(window).x << " " << sf::Mouse::getPosition(window).y <<  " " <<  sf::Mouse::isButtonPressed(sf::Mouse::Left)<< std::endl;    
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && button.checkInput(sf::Mouse::getPosition(window))) {
+            std::cout << HERE << std::endl;
         }
 
         window.clear();
         
         button.draw();
 
+
         window.display();
 
-        /*menu(window);*/
+        
+        // menu(window);
 
         /*visual(window, elements, -1);*/
 
