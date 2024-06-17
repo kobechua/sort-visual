@@ -200,6 +200,8 @@ void menu(sf::RenderWindow& window) {
     std::cout << "Enter N: ";
     std::cin >> n;
 
+    
+
     std::vector<int> el(n);
     
         while (1) {
@@ -224,15 +226,16 @@ int main() {
  
     window.setFramerateLimit(60);
     
-    /*ask for user input
-    int n = 37;
-
-    std::vector<int> elements(n);
-
-    randomize(elements);
-    */
+    sf::Font font;
+    if(!font.loadFromFile("./Tiny5.ttf")) return EXIT_FAILURE;
     
-    Button button(window, 0, 100, 25, 150, 140, 12, "test", "./Tiny5.ttf", sf::Color::White);
+    sf::String playerInput;
+    sf::Text playerText("", font, 20);    
+
+    playerText.setPosition(20,20);
+    playerText.setFillColor(sf::Color::White);
+
+    Button button(window, 0, 100, 25, 150, 140, 12, "Submit", "./Tiny5.ttf", sf::Color::White);
 
     while (window.isOpen())
     {
@@ -241,6 +244,15 @@ int main() {
         {
             if (event.type == sf::Event::Closed)
                 window.close();
+            
+            if (event.type == sf::Event::TextEntered) {
+                if (event.text.unicode == 8 && !(playerInput.isEmpty())) playerInput.erase(playerInput.getSize() - 1);
+                else if (event.text.unicode != 8) {
+                    playerInput += event.text.unicode;
+                    playerText.setString(playerInput);  
+                    std::cout << event.text.unicode << std::endl;
+                }
+            }
         }
         
         // std::cout << sf::Mouse::getPosition(window).x << " " << sf::Mouse::getPosition(window).y <<  " " <<  sf::Mouse::isButtonPressed(sf::Mouse::Left)<< std::endl;    
@@ -252,7 +264,7 @@ int main() {
         
         button.draw();
 
-
+        window.draw(playerText);
         window.display();
 
         
