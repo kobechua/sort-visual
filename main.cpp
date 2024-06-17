@@ -53,9 +53,10 @@ public:
     }
 
     bool checkInput(sf::Vector2i position) {
-        if (position.x > x && position.x < x + w && position.y < y && position.y > y + h) {
 
+        // std::cout << position.x << " " << position.y << " " << x << " " << y << " " << x + w << " " << y + h << std::endl;
 
+        if (position.x > x && position.x < x + w && position.y > y && position.y < y + h) {
             return true;
         }
         return false;
@@ -242,9 +243,9 @@ int main() {
                 window.close();
         }
         
-        std::cout << sf::Mouse::getPosition(window).x << " " << sf::Mouse::getPosition(window).y <<  " " <<  sf::Mouse::isButtonPressed(sf::Mouse::Left)<< std::endl;    
+        // std::cout << sf::Mouse::getPosition(window).x << " " << sf::Mouse::getPosition(window).y <<  " " <<  sf::Mouse::isButtonPressed(sf::Mouse::Left)<< std::endl;    
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && button.checkInput(sf::Mouse::getPosition(window))) {
-            std::cout << HERE << std::endl;
+            menu(window); 
         }
 
         window.clear();
